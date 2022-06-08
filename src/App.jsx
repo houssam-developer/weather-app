@@ -63,10 +63,10 @@ function App() {
 	}, [])
 
 	return (
-		<div className="">
+		<div className="flex flex-col md:flex-row h-full border-2 border-orange-400">
 
 			{/* Today Recap */}
-			<div className='flex flex-col h-screen bg-[#1e213a]'>
+			<div className='flex-[1_1_300px] min-w-[280px]  min-h-screen bg-[#1e213a] flex flex-col'>
 				{/* Location Buttons */}
 				<div className='flex items-center justify-between  p-2'>
 					<button className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] shadow-xl'>Search for places</button>
@@ -89,6 +89,109 @@ function App() {
 							<MdLocationOn size={20} />
 							<span>{weatherService.firstLetterUppercase(weatherLocation)}</span>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<div className='flex-grow text-[#E7E7EB] border-2 border-orange-400 flex flex-col'>
+				{/* NEXT DAYS */}
+				<div className=' p-4 flex flex-wrap gap-4 justify-center '>
+					<div className='flex flex-col items-center justify-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
+						<h3 className='font-medium'>Mon, 8 Jun</h3>
+						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
+						<div className='flex items-center gap-4'>
+							<div className='flex items-center py-2'>
+								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
+								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+							<div className='flex items-center py-2 text-[#a09fb1]'>
+								<span className=' font-medium'>1</span>
+								<span className='text-lg font-medium'>6</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+						</div>
+					</div>
+					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
+						<h3 className='font-medium'>Mon, 8 Jun</h3>
+						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
+						<div className='flex items-center gap-4'>
+							<div className='flex items-center py-2'>
+								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
+								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+							<div className='flex items-center py-2 text-[#a09fb1]'>
+								<span className=' font-medium'>1</span>
+								<span className='text-lg font-medium'>6</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+						</div>
+					</div>
+					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
+						<h3 className='font-medium'>Mon, 8 Jun</h3>
+						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
+						<div className='flex items-center gap-4'>
+							<div className='flex items-center py-2'>
+								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
+								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+							<div className='flex items-center py-2 text-[#a09fb1]'>
+								<span className=' font-medium'>1</span>
+								<span className='text-lg font-medium'>6</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+						</div>
+					</div>
+					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
+						<h3 className='font-medium'>Mon, 8 Jun</h3>
+						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
+						<div className='flex items-center gap-4'>
+							<div className='flex items-center py-2'>
+								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
+								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+							<div className='flex items-center py-2 text-[#a09fb1]'>
+								<span className=' font-medium'>1</span>
+								<span className='text-lg font-medium'>6</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+						</div>
+					</div>
+					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
+						<h3 className='font-medium'>Mon, 8 Jun</h3>
+						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
+						<div className='flex items-center gap-4'>
+							<div className='flex items-center py-2'>
+								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
+								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+							<div className='flex items-center py-2 text-[#a09fb1]'>
+								<span className=' font-medium'>1</span>
+								<span className='text-lg font-medium'>6</span>
+								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+				{/* TODAY HIGHTLIGHTS */}
+
+				<div className='text-[#e7e7eb] min-h-screen p-4 flex flex-col gap-4'>
+					<h3>Today's Hightlights</h3>
+					<div className='flex flex-wrap gap-4'>
+						{/* Wind Status */}
+						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Wind Status</div>
+						{/* Humidity */}
+						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Humidity</div>
+						{/* Visibility */}
+						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Visibility</div>
+						{/* Air Pressure */}
+						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Ai Pressure</div>
 					</div>
 				</div>
 
