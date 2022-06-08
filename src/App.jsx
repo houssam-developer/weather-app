@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import './App.scss';
 import { weatherService } from './services/WeatherService';
 import { MdLocationSearching, MdLocationOn, MdAssistantNavigation } from "react-icons/md";
+import { data } from 'autoprefixer';
 
 
 const TemperatureType = {
@@ -31,9 +32,14 @@ function App() {
 	const [weatherWindDeg, setWeatherWindDeg] = useState(0);
 	const [weatherWindSpeed, setWeatherWindSpeed] = useState(0);
 
+	const [weatherNextDays, setweatherNextDays] = useState([]);
+
 	useEffect(() => {
 		const location = 'paris'
-		weatherService.seekByCity(location).then(data => {
+		weatherService.seekByCity(location, true).then(it => {
+			const data = it.list[0];
+			setweatherNextDays(weatherService.parseNextFiveDays(it.list));
+			console.log('#data: ', data);
 			setWeatherLocation(location);
 			setWeatherDate(new Date(data.dt * 1000 - (data.timezone * 1000)).toLocaleDateString());
 			setWeatherCloudsAll(data.clouds.all);
@@ -51,18 +57,19 @@ function App() {
 			rootSelector.style.setProperty('--humidity-percent', `${data.main.humidity}`);
 			rootSelector.style.setProperty('--compas-deg', `${data.wind.deg}`);
 
-			console.log('#data: ', data);
-			console.log(`|__ dt #seconds: ${data.dt}`);
-			console.log('	  |__timezone minus:', new Date(data.dt * 1000 - (data.timezone * 1000))); // minus 
-			console.log('	  |__timezone plus: ', new Date(data.dt * 1000 + (data.timezone * 1000))); // plus
-			console.log(`|__ coord #lon: ${data.coord.lon} #lat: ${data.coord.lat}\n`);
-			console.log(`|__ cloud #all: ${data.clouds.all}\n`);
-			console.log(`|__ main #humidity: ${data.main.humidity}`);
-			console.log(`|__ main #pressure: ${data.main.pressure}`);
-			console.log(`|__ main #temp_min: ${data.main.temp_min}`);
-			console.log(`|__ main #temp_max: ${data.main.temp_max}\n`);
-			console.log(`|__ wind #deg: ${data.wind.deg}`);
-			console.log(`|__ wind #speed: ${data.wind.speed}`);
+			// console.log('#it: ', it);
+			// console.log('#data: ', data);
+			// console.log(`|__ dt #seconds: ${data.dt}`);
+			// console.log('	  |__timezone minus:', new Date(data.dt * 1000 - (data.timezone * 1000))); // minus 
+			// console.log('	  |__timezone plus: ', new Date(data.dt * 1000 + (data.timezone * 1000))); // plus
+			// console.log(`|__ coord #lon: ${data.coord.lon} #lat: ${data.coord.lat}\n`);
+			// console.log(`|__ cloud #all: ${data.clouds.all}\n`);
+			// console.log(`|__ main #humidity: ${data.main.humidity}`);
+			// console.log(`|__ main #pressure: ${data.main.pressure}`);
+			// console.log(`|__ main #temp_min: ${data.main.temp_min}`);
+			// console.log(`|__ main #temp_max: ${data.main.temp_max}\n`);
+			// console.log(`|__ wind #deg: ${data.wind.deg}`);
+			// console.log(`|__ wind #speed: ${data.wind.speed}`);
 		});
 	}, [])
 
@@ -100,86 +107,28 @@ function App() {
 			<div className='flex-grow text-[#E7E7EB] flex flex-col'>
 				{/* NEXT DAYS */}
 				<div className=' p-4 flex flex-wrap gap-4 justify-center '>
-					<div className='flex flex-col items-center justify-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
-						<h3 className='font-medium'>Mon, 8 Jun</h3>
-						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
-						<div className='flex items-center gap-4'>
-							<div className='flex items-center py-2'>
-								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
-								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+
+
+					{
+						weatherNextDays.map(it =>
+							<div className='flex flex-col items-center justify-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
+								<h3 className='font-medium'>{weatherService.formatDateTimestampToHuman(it.dt_txt)}</h3>
+								<img className='max-w-[150px]' src={`./images/openweather/${it.weather[0].icon}.png`} alt="" />
+								<div className='flex items-center gap-4'>
+									<div className='flex items-center py-2'>
+										<span className='font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_max)[0]}</span>
+										<span className='text-lg font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_max)[1]}</span>
+										<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+									</div>
+									<div className='flex items-center py-2 text-[#a09fb1]'>
+										<span className=' font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_min)[0]}</span>
+										<span className='text-lg font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_min)[1]}</span>
+										<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+									</div>
+								</div>
 							</div>
-							<div className='flex items-center py-2 text-[#a09fb1]'>
-								<span className=' font-medium'>1</span>
-								<span className='text-lg font-medium'>6</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-						</div>
-					</div>
-					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
-						<h3 className='font-medium'>Mon, 8 Jun</h3>
-						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
-						<div className='flex items-center gap-4'>
-							<div className='flex items-center py-2'>
-								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
-								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-							<div className='flex items-center py-2 text-[#a09fb1]'>
-								<span className=' font-medium'>1</span>
-								<span className='text-lg font-medium'>6</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-						</div>
-					</div>
-					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
-						<h3 className='font-medium'>Mon, 8 Jun</h3>
-						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
-						<div className='flex items-center gap-4'>
-							<div className='flex items-center py-2'>
-								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
-								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-							<div className='flex items-center py-2 text-[#a09fb1]'>
-								<span className=' font-medium'>1</span>
-								<span className='text-lg font-medium'>6</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-						</div>
-					</div>
-					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
-						<h3 className='font-medium'>Mon, 8 Jun</h3>
-						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
-						<div className='flex items-center gap-4'>
-							<div className='flex items-center py-2'>
-								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
-								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-							<div className='flex items-center py-2 text-[#a09fb1]'>
-								<span className=' font-medium'>1</span>
-								<span className='text-lg font-medium'>6</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-						</div>
-					</div>
-					<div className='flex flex-col items-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
-						<h3 className='font-medium'>Mon, 8 Jun</h3>
-						<img className='max-w-[150px]' src={`./images/openweather/11n.png`} alt="" />
-						<div className='flex items-center gap-4'>
-							<div className='flex items-center py-2'>
-								<span className='font-medium'>{weatherTemperatureCelsius[0]}</span>
-								<span className='text-lg font-medium'>{weatherTemperatureCelsius[1]}</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-							<div className='flex items-center py-2 text-[#a09fb1]'>
-								<span className=' font-medium'>1</span>
-								<span className='text-lg font-medium'>6</span>
-								<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-							</div>
-						</div>
-					</div>
+						)
+					}
 
 
 				</div>

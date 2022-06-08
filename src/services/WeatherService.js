@@ -2,6 +2,30 @@ export const weatherService = (function () {
 	const API_URL = 'https://api.openweathermap.org/data/2.5/';
 	const API_KEY = 'c068eb94bf8c2ed2d66cb6a1cd1356f9';
 
+	const weekdays = new Array(7);
+	weekdays[0] = "Sun";
+	weekdays[1] = "Mon";
+	weekdays[2] = "Tue";
+	weekdays[3] = "Wed";
+	weekdays[4] = "Thu";
+	weekdays[5] = "Fri";
+	weekdays[6] = "Sat";
+
+	const months = [
+		'Jan',
+		'Feb',
+		'Mar',
+		'Apr',
+		'May',
+		'Jun',
+		'Jul',
+		'Aug',
+		'Sep',
+		'Oct',
+		'Nov',
+		'Dec'
+	]
+
 	function seekCommon(argumentName = '', argumentVal = '', forecast = false) {
 		let targetEndPoint = API_URL;
 
@@ -104,7 +128,23 @@ export const weatherService = (function () {
 		const rawPosition = Math.floor((wind_deg / 22.5) + 0.5);
 		const arrayPosition = (rawPosition % 16);
 		return compassPoints[arrayPosition];
-	};
+	}
+
+	function parseNextFiveDays(list = []) {
+		console.log('parseNextFiveDays() ', list);
+		const newList = [];
+		let i = 1;
+
+		// 0 is today - 1 is next Day [+8] for next Day 
+		newList.push(list[1], list[9], list[17], list[25], list[33]);
+		return newList;
+	}
+
+	function formatDateTimestampToHuman(timestamp) {
+		const targetDate = new Date(timestamp);
+		let tomonth = targetDate.getMonth() + 1;
+		return weekdays[parseInt(targetDate.getDay())] + ', ' + targetDate.getDate() + ' ' + months[targetDate.getMonth()];
+	}
 
 	return {
 		seekByCity,
@@ -113,7 +153,9 @@ export const weatherService = (function () {
 		parseTemperatureCelsius,
 		firstLetterUppercase,
 		convertMetersPerSecToMPH,
-		convertDegreeToCompassPoint
+		convertDegreeToCompassPoint,
+		parseNextFiveDays,
+		formatDateTimestampToHuman
 	}
 
 })();
