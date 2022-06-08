@@ -28,8 +28,29 @@ export const weatherService = (function () {
 		return seekCommon('q', argumentVal, forecast);
 	}
 
+	function convertCelsiusToFahrenheit(c) {
+		if (!isNaN(c)) {
+			console.log('convertCelsiusToFahrenheit() c is not number !!');
+			return;
+		}
+
+		return (c * 9 / 5) + 32;
+	}
+
+	function convertFahrenheitToCelsius(f) {
+		if (!isNaN(f)) {
+			console.log('convertFahrenheitToCelsius() f is not number !!');
+			return;
+		}
+
+		// Deduct 32, then multiply by 5, then divide by 9
+		return ((f - 32) * 5) / 9;
+	}
+
 	return {
-		seekByCity
+		seekByCity,
+		convertCelsiusToFahrenheit,
+		convertFahrenheitToCelsius
 	}
 
 })();
