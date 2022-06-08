@@ -188,7 +188,7 @@ function App() {
 						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
 							<h4>Wind Status</h4>
 							<div className='flex items-center gap-1'>
-								<span className='text-5xl font-semibold'>7</span>
+								<span className='text-5xl font-bold'>7</span>
 								<span className='text-2xl font-medium'>mph</span>
 							</div>
 							<div className='flex items-center gap-2'>
@@ -201,11 +201,11 @@ function App() {
 						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
 							<h4>Humidity</h4>
 							<div className='flex items-center gap-1'>
-								<span className='text-5xl font-semibold'>{weatherHumidity}</span>
+								<span className='text-5xl font-bold'>{weatherHumidity}</span>
 								<span className='text-2xl font-medium'>%</span>
 							</div>
 							<div className='w-full'>
-								<div className='flex items-center justify-between humidity-bar'>
+								<div className='flex items-center justify-between humidity-bar mb-1'>
 									<span>0</span>
 									<span>50</span>
 									<span>100</span>
@@ -215,10 +215,22 @@ function App() {
 						</div>
 
 						{/* Visibility */}
-						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Visibility</div>
+						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
+							<h4>Visibility</h4>
+							<div className='flex items-center gap-2'>
+								<span className='text-5xl font-bold'>{weatherCloudsAll}</span>
+								<span className='text-2xl font-semibold'>miles</span>
+							</div>
+						</div>
 
 						{/* Air Pressure */}
-						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Ai Pressure</div>
+						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
+							<h4>Air Pressure</h4>
+							<div className='flex items-center gap-2'>
+								<span className='text-5xl font-bold'>{weatherPressure}</span>
+								<span className='text-2xl font-semibold'>mb</span>
+							</div>
+						</div>
 
 					</div>
 				</div>
