@@ -1,0 +1,26 @@
+:root {
+	--humidity-percent: 69;
+}
+
+.humidity-bar {
+	position: relative;
+	padding-bottom: 1em;
+
+	&::before {
+		position: absolute;
+		content: '';
+		bottom: 0;
+		width: 100%;
+
+		@apply border-[3px] border-white rounded;
+	}
+
+	&::after {
+		position: absolute;
+		content: '';
+		bottom: 0;
+		width: calc(var(--humidity-percent) * 1%);
+
+		@apply border-[3px] border-[#FFEC65] rounded;
+	}
+}

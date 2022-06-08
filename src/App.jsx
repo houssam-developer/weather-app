@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.scss';
 import { weatherService } from './services/WeatherService';
-import { MdLocationSearching, MdLocationOn } from "react-icons/md";
+import { MdLocationSearching, MdLocationOn, MdAssistantNavigation } from "react-icons/md";
 
 
 const TemperatureType = {
@@ -63,7 +63,7 @@ function App() {
 	}, [])
 
 	return (
-		<div className="flex flex-col md:flex-row h-full border-2 border-orange-400">
+		<div className="flex flex-col md:flex-row min-h-full">
 
 			{/* Today Recap */}
 			<div className='flex-[1_1_300px] min-w-[280px]  min-h-screen bg-[#1e213a] flex flex-col'>
@@ -93,7 +93,7 @@ function App() {
 				</div>
 			</div>
 
-			<div className='flex-grow text-[#E7E7EB] border-2 border-orange-400 flex flex-col'>
+			<div className='flex-grow text-[#E7E7EB] flex flex-col'>
 				{/* NEXT DAYS */}
 				<div className=' p-4 flex flex-wrap gap-4 justify-center '>
 					<div className='flex flex-col items-center justify-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
@@ -185,13 +185,41 @@ function App() {
 					<h3>Today's Hightlights</h3>
 					<div className='flex flex-wrap gap-4'>
 						{/* Wind Status */}
-						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Wind Status</div>
+						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
+							<h4>Wind Status</h4>
+							<div className='flex items-center gap-1'>
+								<span className='text-5xl font-semibold'>7</span>
+								<span className='text-2xl font-medium'>mph</span>
+							</div>
+							<div className='flex items-center gap-2'>
+								<MdAssistantNavigation fill='#6E707A' />
+								<span>WSW</span>
+							</div>
+						</div>
+
 						{/* Humidity */}
-						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Humidity</div>
+						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
+							<h4>Humidity</h4>
+							<div className='flex items-center gap-1'>
+								<span className='text-5xl font-semibold'>{weatherHumidity}</span>
+								<span className='text-2xl font-medium'>%</span>
+							</div>
+							<div className='w-full'>
+								<div className='flex items-center justify-between humidity-bar'>
+									<span>0</span>
+									<span>50</span>
+									<span>100</span>
+								</div>
+								<div className='flex justify-end'>%</div>
+							</div>
+						</div>
+
 						{/* Visibility */}
 						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Visibility</div>
+
 						{/* Air Pressure */}
 						<div className='bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px]'>Ai Pressure</div>
+
 					</div>
 				</div>
 
