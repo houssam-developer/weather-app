@@ -86,12 +86,34 @@ export const weatherService = (function () {
 		return s.charAt(0).toUpperCase() + s.slice(1);
 	}
 
+	function convertMetersPerSecToMPH(mps) {
+		const mph = +((2.23694 * mps).toFixed(2));
+		return mph;
+	}
+
+	function convertDegreeToCompassPoint(wind_deg) {
+		// const compassPoints = ["North", "North North East", "North East", "East North East",
+		// 	"East", "East South East", "South East", "South South East",
+		// 	"South", "South South West", "South West", "West South West",
+		// 	"West", "West North West", "North West", "North North West"];
+
+		const compassPoints = ["N", "NNE", "NE", "ENE",
+			"E", "ESE", "SE", "SSE",
+			"S", "SSW", "SW", "WSW",
+			"W", "WNW", "NW", "NNW"];
+		const rawPosition = Math.floor((wind_deg / 22.5) + 0.5);
+		const arrayPosition = (rawPosition % 16);
+		return compassPoints[arrayPosition];
+	};
+
 	return {
 		seekByCity,
 		convertCelsiusToFahrenheit,
 		convertFahrenheitToCelsius,
 		parseTemperatureCelsius,
-		firstLetterUppercase
+		firstLetterUppercase,
+		convertMetersPerSecToMPH,
+		convertDegreeToCompassPoint
 	}
 
 })();

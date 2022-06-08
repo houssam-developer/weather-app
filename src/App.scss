@@ -1,6 +1,7 @@
 :root {
 	// TODO: update humidity css variable
 	--humidity-percent: 69;
+	--compas-deg: 30;
 }
 
 .humidity-bar {
@@ -24,4 +25,8 @@
 
 		@apply border-[3px] border-[#FFEC65] rounded;
 	}
+}
+
+.compas-wind {
+	transform: rotate(calc(var(--compas-deg) * 1deg));
 }

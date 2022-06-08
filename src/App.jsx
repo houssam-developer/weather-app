@@ -32,7 +32,7 @@ function App() {
 	const [weatherWindSpeed, setWeatherWindSpeed] = useState(0);
 
 	useEffect(() => {
-		const location = 'rabat'
+		const location = 'paris'
 		weatherService.seekByCity(location).then(data => {
 			setWeatherLocation(location);
 			setWeatherDate(new Date(data.dt * 1000 - (data.timezone * 1000)).toLocaleDateString());
@@ -46,6 +46,10 @@ function App() {
 			setWeatherTemperatureMax(data.main.temp_max);
 			setWeatherWindDeg(data.wind.deg);
 			setWeatherWindSpeed(data.wind.speed);
+
+			const rootSelector = document.querySelector(':root');
+			rootSelector.style.setProperty('--humidity-percent', `${data.main.humidity}`);
+			rootSelector.style.setProperty('--compas-deg', `${data.wind.deg}`);
 
 			console.log('#data: ', data);
 			console.log(`|__ dt #seconds: ${data.dt}`);
@@ -188,12 +192,12 @@ function App() {
 						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
 							<h4>Wind Status</h4>
 							<div className='flex items-center gap-1'>
-								<span className='text-5xl font-bold'>7</span>
+								<span className='text-5xl font-bold'>{weatherService.convertMetersPerSecToMPH(weatherWindSpeed)}</span>
 								<span className='text-2xl font-medium'>mph</span>
 							</div>
 							<div className='flex items-center gap-2'>
-								<MdAssistantNavigation fill='#6E707A' />
-								<span>WSW</span>
+								<MdAssistantNavigation fill='#6E707A' className='compas-wind' />
+								<span>{weatherService.convertDegreeToCompassPoint(weatherWindDeg)}</span>
 							</div>
 						</div>
 
