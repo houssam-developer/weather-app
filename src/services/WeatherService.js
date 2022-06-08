@@ -140,11 +140,13 @@ export const weatherService = (function () {
 		return newList;
 	}
 
-	function formatDateTimestampToHuman(timestamp) {
+	function formatDateTimestampToHuman(timestamp, today = false) {
 		const targetDate = new Date(timestamp);
 		let tomonth = targetDate.getMonth() + 1;
 		return weekdays[parseInt(targetDate.getDay())] + ', ' + targetDate.getDate() + ' ' + months[targetDate.getMonth()];
 	}
+
+
 
 	return {
 		seekByCity,

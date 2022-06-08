@@ -35,13 +35,13 @@ function App() {
 	const [weatherNextDays, setweatherNextDays] = useState([]);
 
 	useEffect(() => {
-		const location = 'paris'
+		const location = 'madrid'
 		weatherService.seekByCity(location, true).then(it => {
 			const data = it.list[0];
 			setweatherNextDays(weatherService.parseNextFiveDays(it.list));
 			console.log('#data: ', data);
 			setWeatherLocation(location);
-			setWeatherDate(new Date(data.dt * 1000 - (data.timezone * 1000)).toLocaleDateString());
+			setWeatherDate(weatherService.formatDateTimestampToHuman(data.dt_txt, true));
 			setWeatherCloudsAll(data.clouds.all);
 			setWeatherDescription(data.weather[0].description);
 			setWeatherIcon(data.weather[0].icon);
@@ -95,7 +95,7 @@ function App() {
 							<span className='text-[#a09fb1] text-2xl self-end pb-2 pl-1 font-semibold'>{TemperatureSymbol[currentTemperatureType]}</span>
 						</div>
 						<div className='text-[#a09fb1] font-semibold text-xl md:text-4xl'>{weatherService.firstLetterUppercase(weatherDescription)}</div>
-						<div className='text-[#a09fb1] py-4'>Today - {weatherDate}</div>
+						<div className='text-[#a09fb1] py-4'>Today &#8226; {weatherDate}</div>
 						<div className='text-[#a09fb1] flex items-center gap-2'>
 							<MdLocationOn size={20} />
 							<span>{weatherService.firstLetterUppercase(weatherLocation)}</span>
