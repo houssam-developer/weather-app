@@ -2,14 +2,21 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.scss';
 import { weatherService } from './services/WeatherService';
+import { MdLocationSearching, MdLocationOn } from "react-icons/md";
+
 
 const TemperatureType = {
 	CELSIUS: 'celsius',
 	FAHRENHEIT: 'fahrenheit',
 };
 
+const TemperatureSymbol = {
+	'celsius': '°C',
+	'fahrenheit': '°F',
+};
+
 function App() {
-	const [currentTemperatureType, setCurrentTemperatureType] = useState(TemperatureType.FAHRENHEIT);
+	const [currentTemperatureType, setCurrentTemperatureType] = useState(TemperatureType.CELSIUS);
 	const [weatherLocation, setWeatherLocation] = useState('');
 	const [weatherDate, setWeatherDate] = useState('');
 	const [weatherCloudsAll, setWeatherCloudsAll] = useState(0);
@@ -18,7 +25,8 @@ function App() {
 	const [weatherHumidity, setWeatherHumidity] = useState(0);
 	const [weatherPressure, setWeatherPressure] = useState(0);
 	const [weatherTemperatureMin, setWeatherTemperatureMin] = useState(0);
-	const [weatherTemperature, setWeatherTemperature] = useState(0);
+	const [weatherTemperatureCelsius, setWeatherTemperatureCelsius] = useState([]);
+	const [weatherTemperatureFareheinheit, setWeatherTemperatureFareheinheit] = useState(0);
 	const [weatherTemperatureMax, setWeatherTemperatureMax] = useState(0);
 	const [weatherWindDeg, setWeatherWindDeg] = useState(0);
 	const [weatherWindSpeed, setWeatherWindSpeed] = useState(0);
@@ -34,7 +42,7 @@ function App() {
 			setWeatherHumidity(data.main.humidity);
 			setWeatherPressure(data.main.pressure);
 			setWeatherTemperatureMin(data.main.temp_min);
-			setWeatherTemperature(data.main.temp);
+			setWeatherTemperatureCelsius(weatherService.parseTemperatureCelsius(data.main.temp));
 			setWeatherTemperatureMax(data.main.temp_max);
 			setWeatherWindDeg(data.wind.deg);
 			setWeatherWindSpeed(data.wind.speed);
@@ -55,8 +63,39 @@ function App() {
 	}, [])
 
 	return (
-		<div className="p-4">
-			<div className='ml-auto font-sans font-bold  flex justify-end items-center gap-2 mb-8'>
+		<div className="">
+
+			{/* Today Recap */}
+			<div className='flex flex-col h-screen bg-[#1e213a]'>
+				{/* Location Buttons */}
+				<div className='flex items-center justify-between  p-2'>
+					<button className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] shadow-xl'>Search for places</button>
+					<button className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] rounded-full shadow-xl'>
+						<MdLocationSearching />
+					</button>
+				</div>
+
+				<div className=' flex-grow text-white flex flex-col items-center'>
+					<img className='max-w-[150px] py-8' src={`./images/openweather/${weatherIcon}.png`} alt="" />
+					<div className='flex-grow w-full flex flex-col items-center'>
+						<div className='flex items-center py-2'>
+							<span className='text-6xl font-semibold'>{weatherTemperatureCelsius[0]}</span>
+							<span className='text-7xl font-semibold pt-2'>{weatherTemperatureCelsius[1]}</span>
+							<span className='text-[#a09fb1] text-2xl self-end pb-2 pl-1 font-semibold'>{TemperatureSymbol[currentTemperatureType]}</span>
+						</div>
+						<div className='text-[#a09fb1] font-semibold text-xl md:text-4xl'>{weatherService.firstLetterUppercase(weatherDescription)}</div>
+						<div className='text-[#a09fb1] py-4'>Today - {weatherDate}</div>
+						<div className='text-[#a09fb1] flex items-center gap-2'>
+							<MdLocationOn size={20} />
+							<span>{weatherService.firstLetterUppercase(weatherLocation)}</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+			{/* <div className='ml-auto font-sans font-bold  flex justify-end items-center gap-2 mb-8'>
 				<button className=' bg-slate-700 p-2 rounded-full px-3 text-white'>°C</button>
 				<button className=' bg-slate-200 p-2 rounded-full px-3'>°F</button>
 			</div>
@@ -111,7 +150,7 @@ function App() {
 						<div>{weatherWindSpeed}</div>
 					</div>
 				</div>
-			</section>
+			</section> */}
 		</div>
 	)
 }
