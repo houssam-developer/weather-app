@@ -316,66 +316,9 @@ function App() {
 
 					</div>
 				</div>
-
+				<p className="text-[#ddd] text-center p-4 font-medium">created by <span className='font-semibold text-[#f2f2f2]'>houssam-developer</span> - devChallenges.io</p>
 			</div>
 
-
-			{/* <div className='ml-auto font-sans font-bold  flex justify-end items-center gap-2 mb-8'>
-				<button className=' bg-slate-700 p-2 rounded-full px-3 text-white'>°C</button>
-				<button className=' bg-slate-200 p-2 rounded-full px-3'>°F</button>
-			</div>
-
-			<section className='p-2 bg-slate-900 flex flex-col items-center gap-10'>
-				<div className='text-white flex flex-col items-center justify-start'>
-					<h2>Today</h2>
-					<img className='max-w-[80px]' src={`./images/openweather/${weatherIcon}.png`} alt="" />
-					<h3>{weatherDescription}</h3>
-				</div>
-
-				<div className=' text-white p-4 flex flex-wrap gap-4'>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Location</div>
-						<div>{weatherLocation.toUpperCase()}</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Date</div>
-						<div>{weatherDate}</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Cloud</div>
-						<div></div>
-						<div>{weatherCloudsAll}%</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Humidity</div>
-						<div>{weatherHumidity}%</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Pressure</div>
-						<div>{weatherPressure}</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Temp Min</div>
-						<div>{weatherTemperatureMin}</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Temp</div>
-						<div>{weatherTemperature}</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Temp Max</div>
-						<div>{weatherTemperatureMax}</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Wind Deg</div>
-						<div>{weatherWindDeg}</div>
-					</div>
-					<div className='flex-[1_1_100px] bg-slate-700 p-2 rounded flex flex-col items-center gap-2'>
-						<div>Wind Speed</div>
-						<div>{weatherWindSpeed}</div>
-					</div>
-				</div>
-			</section> */}
 		</div>
 	)
 }
