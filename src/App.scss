@@ -2,7 +2,9 @@
 
 	--humidity-percent: 69;
 	--compas-deg: 30;
-	--modal-search-left-position: -150%;
+	--modal-search-left-position: -100%;
+	--modal-search-opacity: 0;
+	--modal-search-pointer-events: none;
 }
 
 .btn-temperature {
@@ -19,14 +21,15 @@
 	top: 0;
 	bottom: 0;
 	left: var(--modal-search-left-position);
-
+	opacity: var(--modal-search-opacity);
+	pointer-events: var(--modal-search-pointer-events);
 	width: 100%;
 	padding: 1em;
 
 	background-color: #1f2245;
 	color: #f2f2f2;
 
-	transition: left 300ms;
+	transition: opacity 150ms, left 300ms;
 
 	display: flex;
 	flex-direction: column;

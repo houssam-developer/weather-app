@@ -85,27 +85,26 @@ function App() {
 	function handleBtnSearchPlacesEvent(e) {
 		e.preventDefault();
 		updateCssVariable('--modal-search-left-position', '0');
+		updateCssVariable('--modal-search-opacity', '1');
+		updateCssVariable('--modal-search-pointer-events', 'initial');
 	}
 
 	function handleBtnCloseModal(e) {
 		e.preventDefault();
-		updateCssVariable('--modal-search-left-position', '-150%');
+		updateCssVariable('--modal-search-left-position', '-150');
+		updateCssVariable('--modal-search-opacity', '0');
+		updateCssVariable('--modal-search-pointer-events', 'none');
 	}
 
 	function handleFormModalSearchEvent(e) {
 		e.preventDefault();
-
-
 		setTargetLocation(inputModalSearchRef.current.value);
 	}
 
 	function handleBtnSuggestion(e) {
 		e.preventDefault();
-
-
 		inputModalSearchRef.current.focus();
 		inputModalSearchRef.current.value = e.currentTarget.value;
-
 		// trigger submit event
 		btnModalSearchSubmitRef.current.click();
 
@@ -151,10 +150,10 @@ function App() {
 	}
 
 	return (
-		<div className="flex flex-col md:flex-row min-h-full">
+		<div className="flex flex-col md:flex-row min-h-full mx-auto max-w-[1600px]">
 
 			{/* Today Recap */}
-			<div className='relative flex-[1_1_300px] min-w-[280px] min-h-screen bg-[#1e213a] flex flex-col'>
+			<div className='relative flex-[1_1_300px] min-w-[280px] md:max-w-[400px] min-h-screen bg-[#1e213a] flex flex-col '>
 
 				{/* Modal Search */}
 				<div className='search-modal'>
@@ -217,14 +216,14 @@ function App() {
 				</div>
 			</div>
 
-			<div className='flex-grow text-[#E7E7EB] flex flex-col'>
+			<div className='flex-grow text-[#E7E7EB] flex flex-col md:gap-4'>
 				<div className='ml-auto  flex justify-end items-center gap-2 p-2 text-[#1f2245]'>
 					<button ref={btnTemperatureCelsiusRef} onClick={() => handleBtnTemperature(TemperatureType.CELSIUS)} className='btn-temperature btn-temperature--selected'>°C</button>
 					<button ref={btnTemperatureFareheinheitRef} onClick={() => handleBtnTemperature(TemperatureType.FAHRENHEIT)} className='btn-temperature'>°F</button>
 				</div>
 
 				{/* NEXT DAYS */}
-				<div className=' p-4 flex flex-wrap gap-4 justify-center  '>
+				<div className=' p-4 flex flex-wrap gap-4 justify-center '>
 
 					{
 						weatherNextDays.map(it =>
@@ -263,13 +262,13 @@ function App() {
 				</div>
 				{/* TODAY HIGHTLIGHTS */}
 
-				<div className='text-[#e7e7eb] min-h-screen p-4 flex flex-col gap-4'>
-					<h3>Today's Hightlights</h3>
-					<div className='flex flex-wrap gap-4 border-2 border-orange-400'>
+				<div className=' text-[#e7e7eb] p-4 flex flex-col gap-4'>
+					<h3 className='font-bold text-2xl mb-2'>Today's Hightlights</h3>
+					<div className=' flex flex-wrap justify-center gap-4 md:gap-8 mx-auto'>
 
 						{/* Wind Status */}
-						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
-							<h4>Wind Status</h4>
+						<div className='p-4 bg-[#1e213a] flex-[1_1_280px] max-w-[300px] flex flex-col items-center  gap-5'>
+							<h4 className='font-medium'>Wind Status</h4>
 							<div className='flex items-center gap-1'>
 								<span className='text-5xl font-bold'>{weatherService.convertMetersPerSecToMPH(weatherWindSpeed)}</span>
 								<span className='text-2xl font-medium'>mph</span>
@@ -281,8 +280,8 @@ function App() {
 						</div>
 
 						{/* Humidity */}
-						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
-							<h4>Humidity</h4>
+						<div className='p-4 bg-[#1e213a] flex-[1_1_280px] max-w-[300px] flex flex-col items-center justify-center gap-4'>
+							<h4 className='font-medium'>Humidity</h4>
 							<div className='flex items-center gap-1'>
 								<span className='text-5xl font-bold'>{weatherHumidity}</span>
 								<span className='text-2xl font-medium'>%</span>
@@ -298,8 +297,8 @@ function App() {
 						</div>
 
 						{/* Visibility */}
-						<div className='p-4 bg-[#1e213a] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
-							<h4>Visibility</h4>
+						<div className='p-4 bg-[#1e213a] flex-[1_1_280px] max-w-[300px] flex flex-col items-center justify-center gap-3'>
+							<h4 className='font-medium'>Visibility</h4>
 							<div className='flex items-center gap-2'>
 								<span className='text-5xl font-bold'>{weatherCloudsAll}</span>
 								<span className='text-2xl font-semibold'>miles</span>
@@ -307,8 +306,8 @@ function App() {
 						</div>
 
 						{/* Air Pressure */}
-						<div className='p-4 bg-[#1e213a] flex-[1_1_280px] flex flex-col items-center gap-3'>
-							<h4>Air Pressure</h4>
+						<div className='p-4 bg-[#1e213a] flex-[1_1_280px] max-w-[300px] flex flex-col items-center gap-5'>
+							<h4 className='font-medium'>Air Pressure</h4>
 							<div className='flex items-center gap-2'>
 								<span className='text-5xl font-bold'>{weatherPressure}</span>
 								<span className='text-2xl font-semibold'>mb</span>
