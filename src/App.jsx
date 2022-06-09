@@ -37,6 +37,9 @@ function App() {
 
 	const [weatherNextDays, setweatherNextDays] = useState([]);
 
+	const btnModalSearchSubmitRef = useRef();
+	const inputModalSearchRef = useRef();
+
 	useEffect(() => {
 		const location = 'paris'
 		weatherService.seekByCity(location, true).then(it => {
@@ -85,6 +88,18 @@ function App() {
 		updateCssVariable('--modal-search-left-position', '-100%');
 	}
 
+	function handleFormModalSearchEvent(e) {
+		e.preventDefault();
+		console.log(`📃 handleFormModalSearcEvent()`);
+	}
+
+	function handleBtnSuggestion(e) {
+		e.preventDefault();
+		inputModalSearchRef.current.focus();
+		inputModalSearchRef.current.value = e.target.value;
+		btnModalSearchSubmitRef.current.click();
+	}
+
 	return (
 		<div className="flex flex-col md:flex-row min-h-full">
 
@@ -98,24 +113,24 @@ function App() {
 							<MdClose size={24} />
 						</button>
 					</div>
-					<form className='w-full flex flex-col gap-8'>
+					<form className='w-full flex flex-col gap-8' onSubmit={handleFormModalSearchEvent}>
 						<div className='flex items-center justify-between gap-2'>
 							<div className='container-search-input'>
 								<MdSearch size={24} />
-								<input type="text" placeholder='Search location' />
+								<input ref={inputModalSearchRef} type="text" placeholder='Search location' />
 							</div>
-							<button className='bg-[#3C47E9] border-[1px] border-[#3C47E9] p-3 font-semibold'>Search</button>
+							<button ref={btnModalSearchSubmitRef} type='submit' className='bg-[#3C47E9] border-[1px] border-[#3C47E9] p-3 font-semibold'>Search</button>
 						</div>
 						<div className='flex flex-col gap-2'>
-							<button className='search-suggestion'>
+							<button onClick={handleBtnSuggestion} value={'London'} className='search-suggestion'>
 								<span>London</span>
 								<MdKeyboardArrowRight size={20} />
 							</button>
-							<button className='search-suggestion'>
+							<button onClick={handleBtnSuggestion} value={'Barcelona'} className='search-suggestion'>
 								<span>Barcelona</span>
 								<MdKeyboardArrowRight />
 							</button>
-							<button className='search-suggestion'>
+							<button onClick={handleBtnSuggestion} value={'Long Beach'} className='search-suggestion'>
 								<span>Long Beach</span>
 								<MdKeyboardArrowRight />
 							</button>

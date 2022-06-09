@@ -37,7 +37,7 @@
 }
 
 .container-search-input {
-	@apply flex-grow p-3 border-[1px] border-[#E7E7EB] text-[#616475] font-medium flex items-center gap-2;
+	@apply transition-colors flex-grow p-3 border-[1px] border-[#E7E7EB] text-[#616475] font-medium flex items-center gap-2;
 
 	&:focus-within {
 		border-color: #616475;
