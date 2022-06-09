@@ -20,6 +20,7 @@ const TemperatureSymbol = {
 
 
 function App() {
+	const [targetLocation, setTargetLocation] = useState('paris');
 	const [currentTemperatureType, setCurrentTemperatureType] = useState(TemperatureType.CELSIUS);
 	const [weatherLocation, setWeatherLocation] = useState('');
 	const [weatherDate, setWeatherDate] = useState('');
@@ -41,12 +42,11 @@ function App() {
 	const inputModalSearchRef = useRef();
 
 	useEffect(() => {
-		const location = 'paris'
-		weatherService.seekByCity(location, true).then(it => {
+		weatherService.seekByCity(targetLocation, true).then(it => {
 			const data = it.list[0];
 			setweatherNextDays(weatherService.parseNextFiveDays(it.list));
 			console.log('#data: ', data);
-			setWeatherLocation(location);
+			setWeatherLocation(targetLocation);
 			setWeatherDate(weatherService.formatDateTimestampToHuman(data.dt_txt, true));
 			setWeatherCloudsAll(data.clouds.all);
 			setWeatherDescription(data.weather[0].description);
@@ -62,21 +62,8 @@ function App() {
 			updateCssVariable('--humidity-percent', `${data.main.humidity}`);
 			updateCssVariable('--compas-deg', `${data.wind.deg}`);
 
-			// console.log('#it: ', it);
-			// console.log('#data: ', data);
-			// console.log(`|__ dt #seconds: ${data.dt}`);
-			// console.log('	  |__timezone minus:', new Date(data.dt * 1000 - (data.timezone * 1000))); // minus 
-			// console.log('	  |__timezone plus: ', new Date(data.dt * 1000 + (data.timezone * 1000))); // plus
-			// console.log(`|__ coord #lon: ${data.coord.lon} #lat: ${data.coord.lat}\n`);
-			// console.log(`|__ cloud #all: ${data.clouds.all}\n`);
-			// console.log(`|__ main #humidity: ${data.main.humidity}`);
-			// console.log(`|__ main #pressure: ${data.main.pressure}`);
-			// console.log(`|__ main #temp_min: ${data.main.temp_min}`);
-			// console.log(`|__ main #temp_max: ${data.main.temp_max}\n`);
-			// console.log(`|__ wind #deg: ${data.wind.deg}`);
-			// console.log(`|__ wind #speed: ${data.wind.speed}`);
 		});
-	}, [])
+	}, [targetLocation])
 
 	function handleBtnSearchPlacesEvent(e) {
 		e.preventDefault();
@@ -90,13 +77,17 @@ function App() {
 
 	function handleFormModalSearchEvent(e) {
 		e.preventDefault();
-		console.log(`📃 handleFormModalSearcEvent()`);
+		console.log(`📃 handleFormModalSearcEvent(), `, e.target);
+
+		setTargetLocation(inputModalSearchRef.current.value);
 	}
 
 	function handleBtnSuggestion(e) {
 		e.preventDefault();
 		inputModalSearchRef.current.focus();
 		inputModalSearchRef.current.value = e.target.value;
+
+		// trigger submit event
 		btnModalSearchSubmitRef.current.click();
 	}
 
@@ -116,8 +107,8 @@ function App() {
 					<form className='w-full flex flex-col gap-8' onSubmit={handleFormModalSearchEvent}>
 						<div className='flex items-center justify-between gap-2'>
 							<div className='container-search-input'>
-								<MdSearch size={24} />
-								<input ref={inputModalSearchRef} type="text" placeholder='Search location' />
+								<MdSearch size={24} className='min-w-[24px]' />
+								<input ref={inputModalSearchRef} type="text" placeholder='Search location' name='location' />
 							</div>
 							<button ref={btnModalSearchSubmitRef} type='submit' className='bg-[#3C47E9] border-[1px] border-[#3C47E9] p-3 font-semibold'>Search</button>
 						</div>
