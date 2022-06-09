@@ -33,8 +33,8 @@ function App() {
 	const [weatherHumidity, setWeatherHumidity] = useState(0);
 	const [weatherPressure, setWeatherPressure] = useState(0);
 	const [weatherTemperatureMin, setWeatherTemperatureMin] = useState(0);
-	const [weatherTemperatureCelsius, setWeatherTemperatureCelsius] = useState([]);
-	const [weatherTemperatureFareheinheit, setWeatherTemperatureFareheinheit] = useState(0);
+	const [weatherTemperatureCelsius, setWeatherTemperatureCelsius] = useState('');
+	const [weatherTemperatureFareheinheit, setWeatherTemperatureFareheinheit] = useState([]);
 	const [weatherTemperatureMax, setWeatherTemperatureMax] = useState(0);
 	const [weatherWindDeg, setWeatherWindDeg] = useState(0);
 	const [weatherWindSpeed, setWeatherWindSpeed] = useState(0);
@@ -42,6 +42,8 @@ function App() {
 
 	const btnModalSearchSubmitRef = useRef();
 	const inputModalSearchRef = useRef();
+	const btnTemperatureCelsiusRef = useRef();
+	const btnTemperatureFareheinheitRef = useRef();
 
 	useEffect(() => {
 		if (latitude && longitude) {
@@ -60,7 +62,7 @@ function App() {
 	function updateWeatherVariables(it, isCurrentPosition) {
 		const data = it.list[0];
 		setweatherNextDays(weatherService.parseNextFiveDays(it.list));
-		console.log('#data: ', data);
+
 		if (isCurrentPosition) { setWeatherLocation('Current Position'); }
 		else { setWeatherLocation(targetLocation); }
 		setWeatherDate(weatherService.formatDateTimestampToHuman(data.dt_txt, true));
@@ -70,7 +72,8 @@ function App() {
 		setWeatherHumidity(data.main.humidity);
 		setWeatherPressure(data.main.pressure);
 		setWeatherTemperatureMin(data.main.temp_min);
-		setWeatherTemperatureCelsius(weatherService.parseTemperatureCelsius(data.main.temp));
+		setWeatherTemperatureCelsius(data.main.temp);
+		setWeatherTemperatureFareheinheit(weatherService.convertCelsiusToFahrenheit(data.main.temp));
 		setWeatherTemperatureMax(data.main.temp_max);
 		setWeatherWindDeg(data.wind.deg);
 		setWeatherWindSpeed(data.wind.speed);
@@ -91,14 +94,14 @@ function App() {
 
 	function handleFormModalSearchEvent(e) {
 		e.preventDefault();
-		console.log(`📃 handleFormModalSearcEvent(), `, e.target);
+
 
 		setTargetLocation(inputModalSearchRef.current.value);
 	}
 
 	function handleBtnSuggestion(e) {
 		e.preventDefault();
-		console.log(`📦 handleBtnSuggestion() `, e.currentTarget);
+
 
 		inputModalSearchRef.current.focus();
 		inputModalSearchRef.current.value = e.currentTarget.value;
@@ -110,12 +113,9 @@ function App() {
 
 	function handleBtnCurrentLocationCompas(e) {
 		e.preventDefault();
-		console.log(`🚀 handleBtnCurrentLocationCompas()`);
 
-		function showPosition(position) {
-			console.log(`📡 showPosition() #position: `, position.coords.latitude);
-			console.log(`📡 showPosition() #position: `, position.coords.longitude);
 
+		function updatePosition(position) {
 			setLatitude(position.coords.latitude);
 			setLongitude(position.coords.longitude);
 		}
@@ -130,14 +130,24 @@ function App() {
 		}
 
 		try {
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(showPosition, showError);
-			} else {
-				console.log(`🚩 BLOCKED`);
-			}
+			if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(updatePosition, showError); }
 		} catch (err) {
 			console.log(`🚫 handleBtnCurrentLocationCompas() #err: `, err);
 		}
+	}
+
+	function handleBtnTemperature(type) {
+		if (type === TemperatureType.CELSIUS) {
+			btnTemperatureFareheinheitRef.current.classList.remove('btn-temperature--selected');
+			btnTemperatureCelsiusRef.current.classList.add('btn-temperature--selected');
+		}
+
+		if (type === TemperatureType.FAHRENHEIT) {
+			btnTemperatureCelsiusRef.current.classList.remove('btn-temperature--selected');
+			btnTemperatureFareheinheitRef.current.classList.add('btn-temperature--selected');
+		}
+
+		setCurrentTemperatureType(type);
 	}
 
 	return (
@@ -190,8 +200,11 @@ function App() {
 					<img className='max-w-[150px] py-8' src={`./images/openweather/${weatherIcon}.png`} alt="" />
 					<div className='flex-grow w-full flex flex-col items-center'>
 						<div className='flex items-center py-2'>
-							<span className='text-6xl font-semibold'>{weatherTemperatureCelsius[0]}</span>
-							<span className='text-7xl font-semibold pt-2'>{weatherTemperatureCelsius[1]}</span>
+							{currentTemperatureType === TemperatureType.CELSIUS ?
+								<span className='text-6xl font-semibold'>{weatherTemperatureCelsius}</span>
+								:
+								<span className='text-6xl font-semibold'>{weatherTemperatureFareheinheit}</span>
+							}
 							<span className='text-[#a09fb1] text-2xl self-end pb-2 pl-1 font-semibold'>{TemperatureSymbol[currentTemperatureType]}</span>
 						</div>
 						<div className='text-[#a09fb1] font-semibold text-xl md:text-4xl'>{weatherService.firstLetterUppercase(weatherDescription)}</div>
@@ -205,26 +218,43 @@ function App() {
 			</div>
 
 			<div className='flex-grow text-[#E7E7EB] flex flex-col'>
+				<div className='ml-auto  flex justify-end items-center gap-2 p-2 text-[#1f2245]'>
+					<button ref={btnTemperatureCelsiusRef} onClick={() => handleBtnTemperature(TemperatureType.CELSIUS)} className='btn-temperature btn-temperature--selected'>°C</button>
+					<button ref={btnTemperatureFareheinheitRef} onClick={() => handleBtnTemperature(TemperatureType.FAHRENHEIT)} className='btn-temperature'>°F</button>
+				</div>
+
 				{/* NEXT DAYS */}
-				<div className=' p-4 flex flex-wrap gap-4 justify-center '>
+				<div className=' p-4 flex flex-wrap gap-4 justify-center  '>
 
 					{
 						weatherNextDays.map(it =>
 							<div key={uuidv4()} className='flex flex-col items-center justify-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
 								<h3 className='font-medium'>{weatherService.formatDateTimestampToHuman(it.dt_txt)}</h3>
 								<img className='max-w-[150px]' src={`./images/openweather/${it.weather[0].icon}.png`} alt="" />
-								<div className='flex items-center gap-4'>
-									<div className='flex items-center py-2'>
-										<span className='font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_max)[0]}</span>
-										<span className='text-lg font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_max)[1]}</span>
-										<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-									</div>
-									<div className='flex items-center py-2 text-[#a09fb1]'>
-										<span className=' font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_min)[0]}</span>
-										<span className='text-lg font-medium'>{weatherService.parseTemperatureCelsius(it.main.temp_min)[1]}</span>
-										<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
-									</div>
-								</div>
+								{
+									currentTemperatureType === TemperatureType.CELSIUS ?
+										<div className='flex items-center gap-4'>
+											<div className='flex items-center py-2'>
+												<span className='text-lg font-medium'>{it.main.temp_max}</span>
+												<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+											</div>
+											<div className='flex items-center py-2 text-[#a09fb1]'>
+												<span className='text-lg font-medium'>{it.main.temp_min}</span>
+												<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+											</div>
+										</div>
+										:
+										<div className='flex items-center gap-4'>
+											<div className='flex items-center py-2'>
+												<span className='textlg font-medium'>{weatherService.convertCelsiusToFahrenheit(it.main.temp_max)}</span>
+												<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+											</div>
+											<div className='flex items-center py-2 text-[#a09fb1]'>
+												<span className='text-lg font-medium'>{weatherService.convertCelsiusToFahrenheit(it.main.temp_min)}</span>
+												<span className='text-lg self-end pb-1 pl-1 font-medium'>{TemperatureSymbol[currentTemperatureType]}</span>
+											</div>
+										</div>
+								}
 							</div>
 						)
 					}
@@ -235,7 +265,8 @@ function App() {
 
 				<div className='text-[#e7e7eb] min-h-screen p-4 flex flex-col gap-4'>
 					<h3>Today's Hightlights</h3>
-					<div className='flex flex-wrap gap-4'>
+					<div className='flex flex-wrap gap-4 border-2 border-orange-400'>
+
 						{/* Wind Status */}
 						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
 							<h4>Wind Status</h4>
@@ -267,7 +298,7 @@ function App() {
 						</div>
 
 						{/* Visibility */}
-						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
+						<div className='p-4 bg-[#1e213a] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
 							<h4>Visibility</h4>
 							<div className='flex items-center gap-2'>
 								<span className='text-5xl font-bold'>{weatherCloudsAll}</span>
@@ -276,7 +307,7 @@ function App() {
 						</div>
 
 						{/* Air Pressure */}
-						<div className='p-4 bg-[#1e213a] min-w-[50px] min-h-[100px] flex-[1_1_280px] flex flex-col items-center gap-3'>
+						<div className='p-4 bg-[#1e213a] flex-[1_1_280px] flex flex-col items-center gap-3'>
 							<h4>Air Pressure</h4>
 							<div className='flex items-center gap-2'>
 								<span className='text-5xl font-bold'>{weatherPressure}</span>

@@ -5,6 +5,15 @@
 	--modal-search-left-position: -150%;
 }
 
+.btn-temperature {
+	@apply p-2 px-3 rounded-full font-bold bg-slate-700 text-white transition-colors;
+
+	&--selected {
+		@apply bg-slate-200 text-[#1f2245];
+
+	}
+}
+
 .search-modal {
 	position: absolute;
 	top: 0;

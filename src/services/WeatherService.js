@@ -42,7 +42,7 @@ export const weatherService = (function () {
 		try {
 			return fetch(targetEndPoint).then(resp => resp.json());
 		} catch (ex) {
-			console.log('seekCommon() ERROR : ', ex);
+			console.log(`🚫 seekCommon() ERROR : `, ex);
 		}
 	}
 
@@ -67,7 +67,7 @@ export const weatherService = (function () {
 			try {
 				cVal = Number(c);
 			} catch (err) {
-				console.log('convertCelsiusToFahrenheit() conversion c to number failed !!');
+				console.log(`🚫 convertCelsiusToFahrenheit() conversion c to number failed !!`);
 				return;
 			}
 		}
@@ -81,7 +81,7 @@ export const weatherService = (function () {
 			try {
 				fVal = Number(f);
 			} catch (err) {
-				console.log('convertFahrenheitToCelsius() conversion f to number failed !!');
+				console.log(`🚫 convertFahrenheitToCelsius() conversion f to number failed !!`);
 				return;
 			}
 		}
@@ -106,7 +106,7 @@ export const weatherService = (function () {
 
 			return tempArray;
 		} catch {
-			console.log('parseTemperatureCelsius() FAILED');
+			console.log(`🚩 parseTemperatureCelsius() FAILED`);
 			return [];
 		}
 	}
@@ -136,7 +136,6 @@ export const weatherService = (function () {
 	}
 
 	function parseNextFiveDays(list = []) {
-		console.log('parseNextFiveDays() ', list);
 		const newList = [];
 		let i = 1;
 
@@ -150,7 +149,6 @@ export const weatherService = (function () {
 		let tomonth = targetDate.getMonth() + 1;
 		return weekdays[parseInt(targetDate.getDay())] + ', ' + targetDate.getDate() + ' ' + months[targetDate.getMonth()];
 	}
-
 
 
 	return {
