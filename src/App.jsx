@@ -2,8 +2,9 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.scss';
 import { weatherService } from './services/WeatherService';
-import { MdLocationSearching, MdLocationOn, MdAssistantNavigation } from "react-icons/md";
+import { MdLocationSearching, MdLocationOn, MdAssistantNavigation, MdSearch, MdKeyboardArrowRight, MdClose } from "react-icons/md";
 import { data } from 'autoprefixer';
+import { updateCssVariable } from './services/css-service';
 
 
 const TemperatureType = {
@@ -15,6 +16,8 @@ const TemperatureSymbol = {
 	'celsius': '°C',
 	'fahrenheit': '°F',
 };
+
+
 
 function App() {
 	const [currentTemperatureType, setCurrentTemperatureType] = useState(TemperatureType.CELSIUS);
@@ -35,7 +38,7 @@ function App() {
 	const [weatherNextDays, setweatherNextDays] = useState([]);
 
 	useEffect(() => {
-		const location = 'madrid'
+		const location = 'paris'
 		weatherService.seekByCity(location, true).then(it => {
 			const data = it.list[0];
 			setweatherNextDays(weatherService.parseNextFiveDays(it.list));
@@ -53,9 +56,8 @@ function App() {
 			setWeatherWindDeg(data.wind.deg);
 			setWeatherWindSpeed(data.wind.speed);
 
-			const rootSelector = document.querySelector(':root');
-			rootSelector.style.setProperty('--humidity-percent', `${data.main.humidity}`);
-			rootSelector.style.setProperty('--compas-deg', `${data.wind.deg}`);
+			updateCssVariable('--humidity-percent', `${data.main.humidity}`);
+			updateCssVariable('--compas-deg', `${data.wind.deg}`);
 
 			// console.log('#it: ', it);
 			// console.log('#data: ', data);
@@ -73,14 +75,57 @@ function App() {
 		});
 	}, [])
 
+	function handleBtnSearchPlacesEvent(e) {
+		e.preventDefault();
+		updateCssVariable('--modal-search-left-position', '0');
+	}
+
+	function handleBtnCloseModal(e) {
+		e.preventDefault();
+		updateCssVariable('--modal-search-left-position', '-100%');
+	}
+
 	return (
 		<div className="flex flex-col md:flex-row min-h-full">
 
 			{/* Today Recap */}
-			<div className='flex-[1_1_300px] min-w-[280px]  min-h-screen bg-[#1e213a] flex flex-col'>
+			<div className='relative flex-[1_1_300px] min-w-[280px] min-h-screen bg-[#1e213a] flex flex-col'>
+
+				{/* Modal Search */}
+				<div className='search-modal'>
+					<div className='flex justify-end'>
+						<button onClick={handleBtnCloseModal}>
+							<MdClose size={24} />
+						</button>
+					</div>
+					<form className='w-full flex flex-col gap-8'>
+						<div className='flex items-center justify-between gap-2'>
+							<div className='container-search-input'>
+								<MdSearch size={24} />
+								<input type="text" placeholder='Search location' />
+							</div>
+							<button className='bg-[#3C47E9] border-[1px] border-[#3C47E9] p-3 font-semibold'>Search</button>
+						</div>
+						<div className='flex flex-col gap-2'>
+							<button className='search-suggestion'>
+								<span>London</span>
+								<MdKeyboardArrowRight size={20} />
+							</button>
+							<button className='search-suggestion'>
+								<span>Barcelona</span>
+								<MdKeyboardArrowRight />
+							</button>
+							<button className='search-suggestion'>
+								<span>Long Beach</span>
+								<MdKeyboardArrowRight />
+							</button>
+						</div>
+					</form>
+				</div>
+
 				{/* Location Buttons */}
 				<div className='flex items-center justify-between  p-2'>
-					<button className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] shadow-xl'>Search for places</button>
+					<button onClick={handleBtnSearchPlacesEvent} className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] shadow-xl'>Search for places</button>
 					<button className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] rounded-full shadow-xl'>
 						<MdLocationSearching />
 					</button>
@@ -107,7 +152,6 @@ function App() {
 			<div className='flex-grow text-[#E7E7EB] flex flex-col'>
 				{/* NEXT DAYS */}
 				<div className=' p-4 flex flex-wrap gap-4 justify-center '>
-
 
 					{
 						weatherNextDays.map(it =>

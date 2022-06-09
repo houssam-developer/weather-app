@@ -14,7 +14,7 @@
 	width: 100%;
 	padding: 1em;
 
-	background-color: hwb(234 12% 73%);
+	background-color: #1f2245;
 	color: #f2f2f2;
 
 	transition: left 300ms;
@@ -24,8 +24,34 @@
 	gap: 2em;
 }
 
+.search-suggestion {
+	@apply transition-colors p-4 font-medium border-[1px] text-[#1f2245] border-transparent flex items-center justify-between;
+
+	& span {
+		color: #E7E7EB;
+	}
+
+	&:hover {
+		@apply border-[#616475] text-[#616475];
+	}
+}
+
 .container-search-input {
-	@apply border-2 border-[#E7E7EB] flex items-center;
+	@apply flex-grow p-3 border-[1px] border-[#E7E7EB] text-[#616475] font-medium flex items-center gap-2;
+
+	&:focus-within {
+		border-color: #616475;
+		color: #E7E7EB;
+	}
+
+	& input {
+		background-color: inherit;
+
+		&:focus {
+			border: none;
+			outline: none;
+		}
+	}
 
 }
 
