@@ -2,7 +2,7 @@
 
 	--humidity-percent: 69;
 	--compas-deg: 30;
-	--modal-search-left-position: -90%;
+	--modal-search-left-position: -150%;
 }
 
 .search-modal {
@@ -37,7 +37,9 @@
 }
 
 .container-search-input {
-	@apply transition-colors flex-grow p-3 border-[1px] border-[#E7E7EB] text-[#616475] font-medium flex items-center gap-2;
+	@apply transition-colors flex-grow p-2 py-3 border-[1px] border-[#E7E7EB] text-[#616475] font-medium flex items-center gap-2;
+
+	overflow-x: hidden;
 
 	&:focus-within {
 		border-color: #616475;
@@ -46,6 +48,7 @@
 
 	& input {
 		background-color: inherit;
+
 
 		&:focus {
 			border: none;

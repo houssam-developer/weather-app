@@ -26,13 +26,13 @@ export const weatherService = (function () {
 		'Dec'
 	]
 
-	function seekCommon(argumentName = '', argumentVal = '', forecast = false) {
+	function seekCommon(argumentVal = '', forecast = false) {
 		let targetEndPoint = API_URL;
 
 		if (forecast) { targetEndPoint += 'forecast' }
 		else { targetEndPoint += 'weather' }
 
-		if (argumentName) { targetEndPoint += `?${argumentName}=${argumentVal}`; }
+		if (argumentVal) { targetEndPoint += `?${argumentVal}`; }
 
 		// standard for kelvius
 		// metric for celsius
@@ -51,8 +51,14 @@ export const weatherService = (function () {
 	// seekCurrentLocationTodayAndNext_5_Days
 	// 
 
-	function seekByCity(argumentVal, forecast = false) {
-		return seekCommon('q', argumentVal, forecast);
+	function seekByCity(city, forecast = false) {
+		const argumentVal = `q=${city}`;
+		return seekCommon(argumentVal, forecast);
+	}
+
+	function seekByLatitudeAndLongitude(latitude, longitude, forecast = false) {
+		const argumentVal = `lat=${latitude}&lon=${longitude}`;
+		return seekCommon(argumentVal, forecast);
 	}
 
 	function convertCelsiusToFahrenheit(c) {
@@ -91,14 +97,13 @@ export const weatherService = (function () {
 			const cValUpdated = parseFloat(cVal).toFixed(0);
 			const tempArray = [];
 			const cValString = cValUpdated.toString();
-			console.log('++++++++++++ cValString', cValString);
+
 			for (let i = 0; i < cValString.length; i++) {
 				let num = Number(cValString.charAt(i));
-				console.log('>>>>>>>>>> num: ', num);
 				tempArray.push(num);
 			}
 
-			//console.log('++++++++++++ tempArray', tempArray);
+
 			return tempArray;
 		} catch {
 			console.log('parseTemperatureCelsius() FAILED');
@@ -157,7 +162,8 @@ export const weatherService = (function () {
 		convertMetersPerSecToMPH,
 		convertDegreeToCompassPoint,
 		parseNextFiveDays,
-		formatDateTimestampToHuman
+		formatDateTimestampToHuman,
+		seekByLatitudeAndLongitude
 	}
 
 })();

@@ -6,6 +6,7 @@ import { MdLocationSearching, MdLocationOn, MdAssistantNavigation, MdSearch, MdK
 import { data } from 'autoprefixer';
 import { updateCssVariable } from './services/css-service';
 
+import { v4 as uuidv4 } from 'uuid';
 
 const TemperatureType = {
 	CELSIUS: 'celsius',
@@ -20,6 +21,8 @@ const TemperatureSymbol = {
 
 
 function App() {
+	const [latitude, setLatitude] = useState('');
+	const [longitude, setLongitude] = useState('');
 	const [targetLocation, setTargetLocation] = useState('paris');
 	const [currentTemperatureType, setCurrentTemperatureType] = useState(TemperatureType.CELSIUS);
 	const [weatherLocation, setWeatherLocation] = useState('');
@@ -35,35 +38,46 @@ function App() {
 	const [weatherTemperatureMax, setWeatherTemperatureMax] = useState(0);
 	const [weatherWindDeg, setWeatherWindDeg] = useState(0);
 	const [weatherWindSpeed, setWeatherWindSpeed] = useState(0);
-
 	const [weatherNextDays, setweatherNextDays] = useState([]);
 
 	const btnModalSearchSubmitRef = useRef();
 	const inputModalSearchRef = useRef();
 
 	useEffect(() => {
+		if (latitude && longitude) {
+			weatherService.seekByLatitudeAndLongitude(latitude, longitude, true).then(it => {
+				updateWeatherVariables(it, true);
+			});
+		}
+	}, [latitude, longitude]);
+
+	useEffect(() => {
 		weatherService.seekByCity(targetLocation, true).then(it => {
-			const data = it.list[0];
-			setweatherNextDays(weatherService.parseNextFiveDays(it.list));
-			console.log('#data: ', data);
-			setWeatherLocation(targetLocation);
-			setWeatherDate(weatherService.formatDateTimestampToHuman(data.dt_txt, true));
-			setWeatherCloudsAll(data.clouds.all);
-			setWeatherDescription(data.weather[0].description);
-			setWeatherIcon(data.weather[0].icon);
-			setWeatherHumidity(data.main.humidity);
-			setWeatherPressure(data.main.pressure);
-			setWeatherTemperatureMin(data.main.temp_min);
-			setWeatherTemperatureCelsius(weatherService.parseTemperatureCelsius(data.main.temp));
-			setWeatherTemperatureMax(data.main.temp_max);
-			setWeatherWindDeg(data.wind.deg);
-			setWeatherWindSpeed(data.wind.speed);
-
-			updateCssVariable('--humidity-percent', `${data.main.humidity}`);
-			updateCssVariable('--compas-deg', `${data.wind.deg}`);
-
+			updateWeatherVariables(it, false);
 		});
-	}, [targetLocation])
+	}, [targetLocation]);
+
+	function updateWeatherVariables(it, isCurrentPosition) {
+		const data = it.list[0];
+		setweatherNextDays(weatherService.parseNextFiveDays(it.list));
+		console.log('#data: ', data);
+		if (isCurrentPosition) { setWeatherLocation('Current Position'); }
+		else { setWeatherLocation(targetLocation); }
+		setWeatherDate(weatherService.formatDateTimestampToHuman(data.dt_txt, true));
+		setWeatherCloudsAll(data.clouds.all);
+		setWeatherDescription(data.weather[0].description);
+		setWeatherIcon(data.weather[0].icon);
+		setWeatherHumidity(data.main.humidity);
+		setWeatherPressure(data.main.pressure);
+		setWeatherTemperatureMin(data.main.temp_min);
+		setWeatherTemperatureCelsius(weatherService.parseTemperatureCelsius(data.main.temp));
+		setWeatherTemperatureMax(data.main.temp_max);
+		setWeatherWindDeg(data.wind.deg);
+		setWeatherWindSpeed(data.wind.speed);
+
+		updateCssVariable('--humidity-percent', `${data.main.humidity}`);
+		updateCssVariable('--compas-deg', `${data.wind.deg}`);
+	}
 
 	function handleBtnSearchPlacesEvent(e) {
 		e.preventDefault();
@@ -72,7 +86,7 @@ function App() {
 
 	function handleBtnCloseModal(e) {
 		e.preventDefault();
-		updateCssVariable('--modal-search-left-position', '-100%');
+		updateCssVariable('--modal-search-left-position', '-150%');
 	}
 
 	function handleFormModalSearchEvent(e) {
@@ -84,11 +98,46 @@ function App() {
 
 	function handleBtnSuggestion(e) {
 		e.preventDefault();
+		console.log(`📦 handleBtnSuggestion() `, e.currentTarget);
+
 		inputModalSearchRef.current.focus();
-		inputModalSearchRef.current.value = e.target.value;
+		inputModalSearchRef.current.value = e.currentTarget.value;
 
 		// trigger submit event
 		btnModalSearchSubmitRef.current.click();
+
+	}
+
+	function handleBtnCurrentLocationCompas(e) {
+		e.preventDefault();
+		console.log(`🚀 handleBtnCurrentLocationCompas()`);
+
+		function showPosition(position) {
+			console.log(`📡 showPosition() #position: `, position.coords.latitude);
+			console.log(`📡 showPosition() #position: `, position.coords.longitude);
+
+			setLatitude(position.coords.latitude);
+			setLongitude(position.coords.longitude);
+		}
+
+		function showError(e) {
+			if (e.code === 1) { alert('Can not get current position (Permission Denied)') }
+			else if (e.code === 2) { alert('Can not get current position (Position unavailable)') }
+			else if (e.code === 3) { alert('Can not get current position (Timeout)') }
+			else {
+				alert('Can not get current position')
+			}
+		}
+
+		try {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition, showError);
+			} else {
+				console.log(`🚩 BLOCKED`);
+			}
+		} catch (err) {
+			console.log(`🚫 handleBtnCurrentLocationCompas() #err: `, err);
+		}
 	}
 
 	return (
@@ -113,15 +162,15 @@ function App() {
 							<button ref={btnModalSearchSubmitRef} type='submit' className='bg-[#3C47E9] border-[1px] border-[#3C47E9] p-3 font-semibold'>Search</button>
 						</div>
 						<div className='flex flex-col gap-2'>
-							<button onClick={handleBtnSuggestion} value={'London'} className='search-suggestion'>
+							<button value={'London'} onClick={handleBtnSuggestion} className='search-suggestion'>
 								<span>London</span>
 								<MdKeyboardArrowRight size={20} />
 							</button>
-							<button onClick={handleBtnSuggestion} value={'Barcelona'} className='search-suggestion'>
+							<button value={'Barcelona'} onClick={handleBtnSuggestion} className='search-suggestion'>
 								<span>Barcelona</span>
 								<MdKeyboardArrowRight />
 							</button>
-							<button onClick={handleBtnSuggestion} value={'Long Beach'} className='search-suggestion'>
+							<button value={'Long Beach'} onClick={handleBtnSuggestion} className='search-suggestion'>
 								<span>Long Beach</span>
 								<MdKeyboardArrowRight />
 							</button>
@@ -132,7 +181,7 @@ function App() {
 				{/* Location Buttons */}
 				<div className='flex items-center justify-between  p-2'>
 					<button onClick={handleBtnSearchPlacesEvent} className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] shadow-xl'>Search for places</button>
-					<button className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] rounded-full shadow-xl'>
+					<button onClick={handleBtnCurrentLocationCompas} className='bg-[#6E707A] font-medium p-2  text-[#e7e7eb] rounded-full shadow-xl'>
 						<MdLocationSearching />
 					</button>
 				</div>
@@ -161,7 +210,7 @@ function App() {
 
 					{
 						weatherNextDays.map(it =>
-							<div className='flex flex-col items-center justify-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
+							<div key={uuidv4()} className='flex flex-col items-center justify-center bg-[#1e213a] p-2 flex-[0_1_120px]'>
 								<h3 className='font-medium'>{weatherService.formatDateTimestampToHuman(it.dt_txt)}</h3>
 								<img className='max-w-[150px]' src={`./images/openweather/${it.weather[0].icon}.png`} alt="" />
 								<div className='flex items-center gap-4'>
